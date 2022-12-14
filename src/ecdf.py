@@ -1,3 +1,5 @@
+# Print an ECDF from mean stretch of various workloads
+
 import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.distributions.empirical_distribution import ECDF
@@ -45,10 +47,10 @@ y = ecdf(x)
 plt.step(x, y, label = "LEM", color = colors[3], linewidth=2, linestyle=linestyle)
 
 if sys.argv[1] == "outputs/scatter_mean_stretch_all_workloads.csv":
-	filename = "plot/ECDF/ecdf_mean_stretch_all_workloads.pdf"
+	filename = "plot/ecdf_mean_stretch_all_workloads.pdf"
 	plt.xlabel('Stretch\'s improvement from FCFS', fontsize=font_size)
 else:
-	filename = "plot/ECDF/ecdf_mean_stretch_all_workloads_bf.pdf"
+	filename = "plot/ecdf_mean_stretch_all_workloads_bf.pdf"
 	plt.xlabel('Stretch\'s improvement from FCFS-BF', fontsize=font_size)
 
 plt.xticks(fontsize=font_size)

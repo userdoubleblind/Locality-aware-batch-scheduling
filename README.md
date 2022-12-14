@@ -28,7 +28,7 @@ The python files are used to plot the figures.
 
 ## Reproducible experiments
 
-You can re-create the figures showing the mean stretch and the total waiting time from section V-B, V-C, V-D, V-E by doing the following steps:
+You can re-create the figures showing the mean stretch and the total waiting time from sections V-B, V-C, V-D and V-E by doing the following steps:
 
 ```bash
 ~/$ bash Expe1.sh inputs/workloads/converted/2022-07-16-\>2022-07-16_V10000_anonymous inputs/clusters/cluster_450_128_32_256_4_1024.txt 1
@@ -43,7 +43,12 @@ You can re-create the figures showing the mean stretch and the total waiting tim
 ~/$ bash Expe1.sh inputs/workloads/converted/2022-08-16-\>2022-08-16_V10000_anonymous inputs/clusters/cluster_450_128_32_256_4_1024.txt 1
 ```
 
-To reproduce the boxplots and ecdf from section V-F you must use the previous commands with each workload contained in inputs/workloads/converted/:
+To reproduce the boxplots and ecdf from section V-F with only the first four experiments mentionned in sections V-B, V-C, V-D and V-E you can do:
+```bash
+~/$ bash Plot_first_4_workloads.sh
+```
+
+To reproduce the boxplots and ecdf with all the workloads from section V-F you must use the previous commands with each workload contained in inputs/workloads/converted/:
 ```bash
 ~/$ bash Expe1.sh inputs/workloads/converted/date_of_the_workload_V10000_anonymous inputs/clusters/cluster_450_128_32_256_4_1024.txt 1
 ```

@@ -350,11 +350,7 @@ int main(int argc, char *argv[])
 		}
 
 		if (old_finished_jobs < finished_jobs && scheduled_job_list->head != NULL) /* Avec new job list */
-		{
-			#ifdef PRINT
-			printf("Core(s) liberated. Need to free them.\n"); fflush(stdout);
-			#endif
-			
+		{			
 			/* Reset all cores and jobs. */
 			reset_cores(node_list, t);
 			

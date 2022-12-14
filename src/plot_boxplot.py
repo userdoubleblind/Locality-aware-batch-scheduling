@@ -1,4 +1,4 @@
-# python3 src/plot_boxplot.py intput_file
+# Boxplots from mean stretch of all workloads
 
 # Import libraries
 import matplotlib.pyplot as plt
@@ -45,7 +45,6 @@ else:
 	
 plt.axhline(y = 1, color = 'black', linestyle = "dotted", linewidth=4)
 
-
 plt.ylim(0, 3.15)
 plt.yticks(fontsize=font_size)
 
@@ -60,10 +59,10 @@ else:
 		patch.set_facecolor(color)
 		
 if sys.argv[1] == "outputs/scatter_mean_stretch_all_workloads.csv":
-	filename = "plot/Boxplot/box_plot_mean_stretch_all_workloads.pdf"
+	filename = "plot/box_plot_mean_stretch_all_workloads.pdf"
 	plt.ylabel('Stretch\'s improvement from FCFS', fontsize=font_size)
 else:
-	filename = "plot/Boxplot/box_plot_mean_stretch_all_workloads_bf.pdf"
+	filename = "plot/box_plot_mean_stretch_all_workloads_bf.pdf"
 	plt.ylabel('Stretch\'s improvement from FCFS-BF', fontsize=font_size)
 plt.savefig(filename, bbox_inches='tight')
 
