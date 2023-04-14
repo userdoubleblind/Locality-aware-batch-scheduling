@@ -45,6 +45,9 @@ do
 	elif [ $((i)) == 11 ]; then
 		day1="01-03"
 		day2="01-09"
+	elif [ $((i)) == 12 ]; then
+		day1="02-21"
+		day2="02-27"
 	fi
 	WORKLOAD="inputs/workloads/converted/2022-${day1}->2022-${day2}_V10000_anonymous"
 	WORKLOAD_TP=${WORKLOAD:27}
@@ -52,18 +55,18 @@ do
 	OUTPUT_FILE=data/Results_FCFS_Score_Backfill_${WORKLOAD_TP}_${CLUSTER_TP}.csv
 	echo "Scheduler,Number of jobs,Maximum queue time,Mean queue time,Total queue time,Maximum flow,Mean flow,Total flow,Transfer time,Makespan,Core time used, Waiting for a load time, Total waiting for a load time and transfer time, Mean Stretch, Mean Stretch With a Minimum, Max Stretch, Max Stretch With a Minimum, Nb Upgraded Jobs, Nb jobs large queue time, Mean flow stretch 128 jobs, Mean flow stretch 256 jobs, Mean flow stretch 1024 jobs, Mean flow stretch with a minimum 128 jobs, Mean flow stretch with a minimum 256 jobs, Mean flow stretch with a minimum 1024 jobs, Number of data reuse" > ${OUTPUT_FILE}
 
-	for ((i=1; i<=10; i++))
+	for ((j=1; j<=10; j++))
 	do
-		if [ $((i)) == 1 ]; then SCHEDULER="Fcfs"; BACKFILL_MODE=0
-		elif [ $((i)) == 2 ]; then SCHEDULER="Fcfs_conservativebf"; BACKFILL_MODE=2
-		elif [ $((i)) == 3 ]; then SCHEDULER="Fcfs_with_a_score_x1_x0_x0_x0"; BACKFILL_MODE=0
-		elif [ $((i)) == 4 ]; then SCHEDULER="Fcfs_with_a_score_conservativebf_x1_x0_x0_x0"; BACKFILL_MODE=2
-		elif [ $((i)) == 5 ]; then SCHEDULER="Fcfs_with_a_score_x500_x1_x0_x0"; BACKFILL_MODE=0
-		elif [ $((i)) == 6 ]; then SCHEDULER="Fcfs_with_a_score_conservativebf_x500_x1_x0_x0"; BACKFILL_MODE=2
-		elif [ $((i)) == 7 ]; then SCHEDULER="Fcfs_with_a_score_adaptative_multiplier_if_EAT_is_t_x500_x1_x0_x0"; BACKFILL_MODE=0
-		elif [ $((i)) == 8 ]; then SCHEDULER="Fcfs_with_a_score_adaptative_multiplier_if_EAT_is_t_conservativebf_x500_x1_x0_x0"; BACKFILL_MODE=2
-		elif [ $((i)) == 9 ]; then SCHEDULER="Fcfs_with_a_score_mixed_strategy_x500_x1_x0_x0"; BACKFILL_MODE=0
-		elif [ $((i)) == 10 ]; then SCHEDULER="Fcfs_with_a_score_mixed_strategy_conservativebf_x500_x1_x0_x0"; BACKFILL_MODE=2
+		if [ $((j)) == 1 ]; then SCHEDULER="Fcfs"; BACKFILL_MODE=0
+		elif [ $((j)) == 2 ]; then SCHEDULER="Fcfs_conservativebf"; BACKFILL_MODE=2
+		elif [ $((j)) == 3 ]; then SCHEDULER="Fcfs_with_a_score_x1_x0_x0_x0"; BACKFILL_MODE=0
+		elif [ $((j)) == 4 ]; then SCHEDULER="Fcfs_with_a_score_conservativebf_x1_x0_x0_x0"; BACKFILL_MODE=2
+		elif [ $((j)) == 5 ]; then SCHEDULER="Fcfs_with_a_score_x500_x1_x0_x0"; BACKFILL_MODE=0
+		elif [ $((j)) == 6 ]; then SCHEDULER="Fcfs_with_a_score_conservativebf_x500_x1_x0_x0"; BACKFILL_MODE=2
+		elif [ $((j)) == 7 ]; then SCHEDULER="Fcfs_with_a_score_adaptative_multiplier_if_EAT_is_t_x500_x1_x0_x0"; BACKFILL_MODE=0
+		elif [ $((j)) == 8 ]; then SCHEDULER="Fcfs_with_a_score_adaptative_multiplier_if_EAT_is_t_conservativebf_x500_x1_x0_x0"; BACKFILL_MODE=2
+		elif [ $((j)) == 9 ]; then SCHEDULER="Fcfs_with_a_score_mixed_strategy_x500_x1_x0_x0"; BACKFILL_MODE=0
+		elif [ $((j)) == 10 ]; then SCHEDULER="Fcfs_with_a_score_mixed_strategy_conservativebf_x500_x1_x0_x0"; BACKFILL_MODE=2
 		fi
 		
 		./src/main $WORKLOAD $CLUSTER $SCHEDULER $CONTRAINTES_TAILLES $OUTPUT_FILE $BACKFILL_MODE $BUSY_CLUSTER_THRESHOLD

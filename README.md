@@ -12,6 +12,8 @@ The source code is in src/
 
 The generated Figures will be in plot/
 
+The generated data to plot the Figures will be in data/
+
 You can also find the methodology we followed to randomly select 12 weeks to evaluate our scheduler in the file random_week_selection.py. Using python3.6.9 you can re-create the random generation by doing python3 random_week_selection.py
 
 ## Source code
