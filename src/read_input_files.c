@@ -1,24 +1,11 @@
-/*
- * Copyright (C) - Anonymous for double blind submission.
- */
- 
-/**
- * Functions used to initialize our simulator.
- * Read the cluster model and the workload as input files.
- * Fill structures with these information.
- **/
-
 #include <main.h>
 
-/** 
- * The cluster is an input file.
- * It is read here and used to initialize a set of nodes as a linked list.
- **/
 void read_cluster(char* input_node_file)
 {
 	node_list = (struct Node_List**) malloc(3*sizeof(struct Node_List));
 	for (int i = 0; i < 3; i++)
 	{
+		//~ node_list[i] = malloc(sizeof(*node_list));
 		node_list[i] = (struct Node_List*) malloc(sizeof(struct Node_List));
 		node_list[i]->head = NULL;
 		node_list[i]->tail = NULL;
@@ -50,16 +37,46 @@ void read_cluster(char* input_node_file)
 		new->memory = atoi(memory);
 		new->bandwidth = atof(bandwidth);
 		new->n_available_cores = 20;
+		
+		if (constraint_on_sizes != 0)
+		{
+			if (new->memory == 128)
+			{
+				number_node_size[0] += 1;
+				index_node = 0;
+			}
+			else if (new->memory == 256)
+			{
+				number_node_size[1] += 1;
+				index_node = 1;
+			}
+			else if (new->memory == 1024)
+			{
+				number_node_size[2] += 1;
+				index_node = 2;
+			}
+			else
+			{
+				perror("Error memory size in read_cluster"); fflush(stdout);
+				exit(EXIT_FAILURE);
+			}
+		}
 		new->index_node_list = index_node;
+		
 		new->data = malloc(sizeof(*new->data));
 		new->data->head = NULL;
 		new->data->tail = NULL;
 		
+		//~ new->cores = malloc(20*sizeof(*new->cores));
 		new->cores = (struct Core**) malloc(20*sizeof(struct Core));
 		for (int i = 0; i < 20; i++)
 		{
+			//~ new->cores[i] = malloc(sizeof(*new->cores));
 			new->cores[i] = (struct Core*) malloc(sizeof(struct Core));
 			new->cores[i]->unique_id = i;
+			//~ new->cores[i]->job_queue = malloc(sizeof(*new->cores[i]->job_queue));
+			//~ new->cores[i]->job_queue->head = NULL;
+			//~ new->cores[i]->job_queue->tail = NULL;
 			new->cores[i]->available_time = 0;
 			new->cores[i]->running_job = false;
 			new->cores[i]->running_job_end = -1;
@@ -74,7 +91,14 @@ void read_cluster(char* input_node_file)
 		new->cores_in_a_hole = malloc(sizeof(*new->cores_in_a_hole));
 		new->cores_in_a_hole->head = NULL;
 		new->cores_in_a_hole->tail = NULL;
-				
+		
+		#ifdef DATA_PERSISTENCE
+		new->data_occupation = 0; /* From 0 to 128 */
+		new->temp_data = malloc(sizeof(*new->temp_data));
+		new->temp_data->head = NULL;
+		new->temp_data->tail = NULL;
+		#endif
+		
 		#ifdef PRINT_CLUSTER_USAGE
 		new->nb_jobs_workload_1 = 0;
 		new->end_of_file_load = 0;
@@ -84,14 +108,17 @@ void read_cluster(char* input_node_file)
 		if (new->memory == 128)
 		{
 			insert_tail_node_list(node_list[0], new);
+			//~ node_list[0]->number_of_node += 1;
 		}
 		else if (new->memory == 256)
 		{
 			insert_tail_node_list(node_list[1], new);
+			//~ node_list[1]->number_of_node += 1;
 		}
 		else if (new->memory == 1024)
 		{
 			insert_tail_node_list(node_list[2], new);
+			//~ node_list[2]->number_of_node += 1;
 		}
 		else
 		{
@@ -105,24 +132,31 @@ void read_cluster(char* input_node_file)
  	fclose(f);
 }
 
-/**
- * The workload is an input file.
- * It is read here to initialize linked list of jobs;
- **/
-void read_workload(char* input_job_file)
+//~ struct Job* read_workload(char* input_job_file, int constraint_on_sizes)
+void read_workload(char* input_job_file, int constraint_on_sizes)
 {
+	//~ job_list = malloc(sizeof(*job_list));
 	job_list = (struct Job_List*) malloc(sizeof(struct Job_List));
+	
+	//~ /** For mixed decreasing strategy **/
+	//~ data_list = (struct Data_List*) malloc(sizeof(struct Data_List));
+	//~ /** For mixed decreasing strategy **/
+	
 	job_list->head = NULL;
 	job_list->tail = NULL;
+	//~ job_list_to_start_from_history = malloc(sizeof(*job_list_to_start_from_history));
 	job_list_to_start_from_history = (struct Job_List*) malloc(sizeof(struct Job_List));
 	job_list_to_start_from_history->head = NULL;
 	job_list_to_start_from_history->tail = NULL;
+	//~ scheduled_job_list = malloc(sizeof(*scheduled_job_list));
 	scheduled_job_list = (struct Job_List*) malloc(sizeof(struct Job_List));
 	scheduled_job_list->head = NULL;
 	scheduled_job_list->tail = NULL;
+	//~ running_jobs = malloc(sizeof(*running_jobs));
 	running_jobs = (struct Job_List*) malloc(sizeof(struct Job_List));
 	running_jobs->head = NULL;
 	running_jobs->tail = NULL;
+	//~ new_job_list = malloc(sizeof(*new_job_list));
 	new_job_list = (struct Job_List*) malloc(sizeof(struct Job_List));
 	new_job_list->head = NULL;
 	new_job_list->tail = NULL;
@@ -146,8 +180,18 @@ void read_workload(char* input_job_file)
     char workload[100];
     char start_time_from_history[100];
     char start_node_from_history[100];
-        
-    while (fscanf(f, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s", s, s, id, s, subtime, s, delay, s, walltime, s, cores, s, s, s, data, s, data_size, s, workload, s, start_time_from_history, s, start_node_from_history, s) == 24)
+    
+    int user_id = 0;
+    char* current_user = malloc(sizeof(char)*9);
+    char* last_user = malloc(sizeof(char)*9);
+    //~ current_user = "";
+    //~ last_user = "";
+    
+    //~ /** For mixed decreasing strategy **/
+    //~ struct Data* d = data_list->head;
+    //~ /** For mixed decreasing strategy **/
+    
+    while (fscanf(f, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s", s, s, id, s, subtime, s, delay, s, walltime, s, cores, s, current_user, s, data, s, data_size, s, workload, s, start_time_from_history, s, start_node_from_history, s) == 24)
 	{
 		total_number_jobs += 1;
 		
@@ -157,13 +201,80 @@ void read_workload(char* input_job_file)
 		new->delay = atoi(delay);	
 		new->walltime = atoi(walltime);
 		new->cores = atoi(cores);
+		//~ /** For mixed decreasing strategy **/
 		new->data = atoi(data);
 		new->data_size = atof(data_size);
+		//~ /** For mixed decreasing strategy **/
 		new->workload = atoi(workload);
 		new->start_time_from_history = atoi(start_time_from_history);
 		new->node_from_history = atoi(start_node_from_history);
-				
-		index_node = 0;
+		
+		//~ printf("%s\n", current_user); fflush(stdout);
+		if (strcmp(current_user, last_user) == 0)
+		{
+			new->user = user_id;
+		}
+		else
+		{
+			strcpy(last_user, current_user);
+			user_id++;
+			new->user = user_id;
+		}
+		
+		//~ /** For mixed decreasing strategy **/
+		//~ /* Need to create the data if it does not exist. 
+		 //~ * I don't have to look at everything because similar data are always consecutive. */
+		//~ if (d->unique_id == atoi(data)) /* The data already exist. */
+		//~ {
+			//~ d->number_of_task_using_it_not_running += 1;
+		//~ }
+		//~ else /* Need to create the data */
+		//~ {
+			//~ struct Data* d = (struct Data*) malloc(sizeof(struct Data));
+			//~ d->next = NULL;
+			//~ d->unique_id = atoi(data);
+			//~ d->start_time = -1;
+			//~ d->end_time = -1;
+			//~ d->intervals = (struct Interval_List*) malloc(sizeof(struct Interval_List));
+			//~ d->intervals->head = NULL;
+			//~ d->intervals->tail = NULL;
+			//~ d->size = atof(data_size);
+			//~ d->number_of_task_using_it_not_running = 1;
+			//~ insert_tail_data_list(data_list, d);	
+		//~ }
+		//~ new->data = d;
+		//~ /** For mixed decreasing strategy **/
+		
+		/* Get index_node */
+		if (constraint_on_sizes != 0)
+		{
+			if ((atof(data_size)*10)/(atoi(cores)*10) == 0.0)
+			{
+				index_node = 0;
+			}
+			else if ((atof(data_size)*10)/(atoi(cores)*10) == 6.4)
+			{
+				index_node = 0;
+			}
+			else if ((atof(data_size)*10)/(atoi(cores)*10) == 12.8)
+			{
+				index_node = 1;
+			}
+			else if ((atof(data_size)*10)/(atoi(cores)*10) == 51.2)
+			{
+				index_node = 2;
+			}
+			else
+			{
+				printf("Job %d: %f x 10 divided by %d x 10 = %f\n", atoi(id), atof(data_size), atoi(cores), (atof(data_size)*10)/(atoi(cores)*10)); fflush(stdout);
+				perror("Error data size in read_workload"); fflush(stdout);
+				exit(EXIT_FAILURE);
+			}
+		}
+		else
+		{
+			index_node = 0;
+		}
 		new->index_node_list = index_node;
 		
 		new->start_time = -1; 
@@ -173,7 +284,18 @@ void read_workload(char* input_job_file)
 		new->node_used = (struct Node*) malloc(sizeof(struct Node));
 		new->node_used = NULL;
 		
+		/* OLD */
+		//~ new->cores_used = malloc(new->cores*sizeof(int));
+		/* NEW */
 		new->cores_used = (int*) malloc(new->cores*sizeof(int));
+		
+		//~ new->cores_used = malloc(new->cores*sizeof(struct Core*));
+		//~ for (int i = 0; i < new->cores; i++)
+		//~ {
+			//~ new->cores_used[i] = malloc(sizeof(struct Core*));
+		//~ }
+		//~ printf("Mallocs ok.\n"); fflush(stdout);
+		
 		new->transfer_time = 0;
 		new->waiting_for_a_load_time = 0;
 		new->next = NULL;
@@ -181,14 +303,58 @@ void read_workload(char* input_job_file)
 		/* Add in job list or job to start from history */
 		if (new->workload != -2)
 		{
+			//~ printf("Insert.\n"); fflush(stdout);
 			insert_tail_job_list(job_list, new);
+			//~ printf("Insert Ok.\n"); fflush(stdout);
 		}
 		else
 		{
+			//~ printf("Insert -2.\n"); fflush(stdout);
+			
+			// NEW
 			insert_job_in_sorted_list(job_list_to_start_from_history, new);
+			
+			// OLD
+			//~ if (job_list_to_start_from_history->head == NULL)
+			//~ {
+				//~ job_list_to_start_from_history->head = new;
+				//~ job_list_to_start_from_history->tail = new;
+			//~ }
+			//~ else
+			//~ {
+				//~ /* Want to insert it so the start time are sorted. */
+				//~ struct Job *temp = job_list_to_start_from_history->head;
+				//~ /* Is it our new head ? */
+				//~ if(temp->start_time_from_history > new->start_time_from_history)
+				//~ {
+					//~ printf("New head.\n"); fflush(stdout);
+					//~ new->next = job_list_to_start_from_history->head;
+					//~ job_list_to_start_from_history->head = new;
+				//~ }
+				//~ else
+				//~ {
+					//~ printf("Not new head.\n"); fflush(stdout);
+					//~ while(temp != NULL)
+					//~ {
+						//~ if(temp->next->start_time_from_history > new->start_time_from_history)
+						//~ {
+							//~ new->next = temp->next;
+							//~ temp->next = new;
+							//~ printf("Inserted -2.\n");
+							//~ break;
+						//~ }
+						//~ temp = temp->next;
+					//~ }
+				//~ }
+			//~ }
+			//~ printf("Insert -2 Ok.\n"); fflush(stdout);	
 		}
+		//~ printf("Added job %d.\n", new->unique_id); fflush(stdout);
 	}
 	fclose(f);
+	
+	free(current_user);
+	free(last_user);
 }
 
 int get_nb_job_to_evaluate(struct Job* l)
@@ -206,29 +372,23 @@ int get_nb_job_to_evaluate(struct Job* l)
 	return count;
 }
 
-/** 
- * Get the starting time of Day 0.
- * Day 0 is the first day we start to 
- * schedule with the desired scheduler.
- **/
 int get_first_time_day_0(struct Job* l)
 {
 	struct Job *j = l;
-	while (j != NULL && j->workload != 0)
+	while (j != NULL && j->workload != 0) /* Attention il faut mettre le j != NULL avant car sinon le j->workload sur un maillon NULL fais un segfault. */
 	{
 		j = j->next;
 	}
+	/* Cas où il n'y a pas de jobs de catégorie 0, comme dans les tests. */
 	if (j == NULL)
 	{
 		printf("No jobs of category 0. First subtime day 0 is set to 0.\n");
 		return 0;
 	}
+	//~ printf("First time day 0 is %d.\n", j->subtime);
 	return j->subtime;
 }
 
-/**
- * Used for printing the cluster' usage.
- **/
 void write_in_file_first_times_all_day(struct Job* l, int first_subtime_day_0)
 {
 	struct Job *j = l;
@@ -266,5 +426,6 @@ void write_in_file_first_times_all_day(struct Job* l, int first_subtime_day_0)
         exit(EXIT_FAILURE);
 	}
 	fprintf(f, "%d %d %d %d", first_subtime_before_0, 0, first_subtime_day_1, first_subtime_day_2);
+	//~ printf("%d %d %d %d\n", first_subtime_before_0, 0, first_subtime_day_1, first_subtime_day_2);
 	fclose(f);
 }
