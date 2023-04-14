@@ -1,11 +1,18 @@
 # Locality-aware-batch-scheduling-of-I-O-intensive-workloads
 
-You can find in this depot the source code of the batch simulator and the schedulers used in the paper Locality-aware batch scheduling of I/O intensive workloads, submitted at CCGrid 2023.
+You can find in this depot the source code of the batch simulator and the schedulers used in the paper Locality-aware batch scheduling of I/O intensive workloads, submitted at ICPP 2023.
+
 Results presented in the paper can be reproduced with this depot.
+
 All the workloads used for our evaluations are in the folder inputs/workloads/converted/
+
 The model of the cluster used is in inputs/clusters/
+
 The source code is in src/
-The generated figures will be in plot/
+
+The generated Figures will be in plot/
+
+You can also find the methodology we followed to randomly select 12 weeks to evaluate our scheduler in the file random_week_selection.py. Using python3.6.9 you can re-create the random generation by doing python3 random_week_selection.py
 
 ## Source code
 
@@ -22,37 +29,25 @@ The code is constructed as follows:
 - print_functions.c contains functions used to print in an output file the results of the execution
 - linked_list_functions gather basic functions for managing linked list
 - backfill_functions.c regroup functions used when using conservative backfilling
-- scheduller_calling.c contain the function that start a scheduler depending on the scheduler chosen by the user
+- scheduler_calling.c contain the function that start a scheduler depending on the scheduler chosen by the user
 
-The python files are used to plot the figures.
+The python file is used to plot the figures.
 
 ## Reproducible experiments
 
-You can re-create the figures showing the mean stretch and the total waiting time from sections V-B, V-C, V-D and V-E by doing the following steps:
+You can re-create Figures 2 and 7 showing the stretch's improvement from Sections 5.5 and 5.6 by doing the following steps:
 
 ```bash
-~/$ bash Expe1.sh inputs/workloads/converted/2022-07-16-\>2022-07-16_V10000_anonymous inputs/clusters/cluster_450_128_32_256_4_1024.txt 1
-```
-```bash
-~/$ bash Expe1.sh inputs/workloads/converted/2022-09-09-\>2022-09-09_V10000_anonymous inputs/clusters/cluster_450_128_32_256_4_1024.txt 1
-```
-```bash
-~/$ bash Expe1.sh inputs/workloads/converted/2022-03-26-\>2022-03-26_V10000_anonymous inputs/clusters/cluster_450_128_32_256_4_1024.txt 1
-```
-```bash
-~/$ bash Expe1.sh inputs/workloads/converted/2022-08-16-\>2022-08-16_V10000_anonymous inputs/clusters/cluster_450_128_32_256_4_1024.txt 1
+~/$ bash Expe1.sh inputs/workloads/converted/2022-10-03-\>2022-10-09_V10000_anonymous 10-03 10-09 0
 ```
 
-To reproduce the boxplots and ecdf from section V-F with only the first four experiments mentionned in sections V-B, V-C, V-D and V-E you can do:
 ```bash
-~/$ bash Plot_first_4_workloads.sh
+~/$ bash Expe1.sh inputs/workloads/converted/2022-10-24-\>2022-10-30_V10000_anonymous 10-24 10-30 1
 ```
+The plots will be in plot/Boxplot/byuser
 
-To reproduce the boxplots and ecdf with all the workloads from section V-F you must use the previous commands with each workload contained in inputs/workloads/converted/:
+To compute the 12 weeks and plot the aggregated results (Figures 9, 10 and 11) do:
 ```bash
-~/$ bash Expe1.sh inputs/workloads/converted/date_of_the_workload_V10000_anonymous inputs/clusters/cluster_450_128_32_256_4_1024.txt 1
+~/$ bash Expe2.sh
 ```
-And then do:
-```bash
-~/$ bash Plot_all_workloads.sh
-```
+The boxplots will be in plot/Boxplot/byuser and the ecdf in plot/ECDF/byuser

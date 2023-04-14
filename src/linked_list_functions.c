@@ -629,11 +629,7 @@ void copy_delete_insert_job_list(struct Job_List* to_delete_from, struct Job_Lis
 		printf("Error list empty.\n");
         exit(EXIT_FAILURE);
     }
-    
-    //~ if (j->unique_id == 11) {
-		//~ printf("Adding 11 in a job_list\n");
-	//~ }
-    
+        
     /* New copy from j */
 	struct Job* new = (struct Job*) malloc(sizeof(struct Job));
 	new->next = NULL;
