@@ -1322,11 +1322,7 @@ void resume_state(int* t, int* old_finished_jobs, int* next_submit_time, char* i
 		new_job->node_used = NULL;
 		new_job->cores_used = (int*) malloc(new_job->cores*sizeof(int));
 		new_job->next = NULL;
-		
-		//~ #ifdef PRINT
-		//~ printf("unique_id: %d, subtime: %d, delay: %d, walltime: %d, cores: %d, data: %d, data_size: %f, index_node_list: %d start_time: %d end_time: %d end_before_walltime: %d transfer_time: %d waiting_for_a_load_time: %d workload: %d start_time_from_history: %d node_from_history: %d\n", new_job->unique_id, new_job->subtime, new_job->delay, new_job->walltime, new_job->cores, new_job->data, new_job->data_size, new_job->index_node_list, new_job->start_time, new_job->end_time, new_job->end_before_walltime, new_job->transfer_time, new_job->waiting_for_a_load_time, new_job->workload, new_job->start_time_from_history, new_job->node_from_history);
-		//~ #endif
-		
+				
 		insert_tail_job_list(new_job_list, new_job);
 		
 		if(!fscanf(f, "%s", str))
@@ -1335,24 +1331,14 @@ void resume_state(int* t, int* old_finished_jobs, int* next_submit_time, char* i
 			exit(EXIT_FAILURE);
 		}
 	}
-	
-	//~ #ifdef PRINT
-	//~ printf("New list:\n");
-	//~ print_job_list(new_job_list->head);
-	//~ printf("\n");
-	//~ #endif
-	
+		
 	if(!fscanf(f, "%s", str))
 	{
 		perror("Error if(!fscanf");
 		exit(EXIT_FAILURE);
 	}
 	while (strcmp(str, "running_jobs:") != 0)
-	{
-		//~ #ifdef PRINT
-		//~ printf("Add a job in scheduled_job_list\n");
-		//~ #endif
-		
+	{		
 		struct Job* new_job = (struct Job*) malloc(sizeof(struct Job));
 		if(!fscanf(f, "%d %s %s %d %s %s %d %s %s %d %s %s %d %s %s %d %s %s %f %s %s %d %s %s %d %s %s %d %s %s %d %s %s %s %s %s %s %d %s %s %d %s %s %d %s %s %d %s %s %d %s %s %d", &new_job->unique_id, str, str, &new_job->subtime, str, str, &new_job->delay, str, str, &new_job->walltime, str, str, &new_job->cores, str, str, &new_job->data, str, str, &new_job->data_size, str, str, &new_job->index_node_list, str, str, &new_job->start_time, str, str, &new_job->end_time, str, str, &end_before_walltime_bool_converter, str, str, str, str, str, str, &new_job->transfer_time, str, str, &new_job->waiting_for_a_load_time, str, str, &new_job->workload, str, str, &new_job->start_time_from_history, str, str, &new_job->node_from_history, str, str, &new_job->user))
 			{
@@ -1372,11 +1358,7 @@ void resume_state(int* t, int* old_finished_jobs, int* next_submit_time, char* i
 		new_job->node_used = NULL;
 		new_job->cores_used = (int*) malloc(new_job->cores*sizeof(int));
 		new_job->next = NULL;
-		
-		//~ #ifdef PRINT
-		//~ printf("unique_id: %d, subtime: %d, delay: %d, walltime: %d, cores: %d, data: %d, data_size: %f, index_node_list: %d start_time: %d end_time: %d end_before_walltime: %d transfer_time: %d waiting_for_a_load_time: %d workload: %d start_time_from_history: %d node_from_history: %d\n", new_job->unique_id, new_job->subtime, new_job->delay, new_job->walltime, new_job->cores, new_job->data, new_job->data_size, new_job->index_node_list, new_job->start_time, new_job->end_time, new_job->end_before_walltime, new_job->transfer_time, new_job->waiting_for_a_load_time, new_job->workload, new_job->start_time_from_history, new_job->node_from_history);
-		//~ #endif
-		
+				
 		insert_tail_job_list(scheduled_job_list, new_job);
 		
 		if(!fscanf(f, "%s", str))
@@ -1469,11 +1451,7 @@ void resume_state(int* t, int* old_finished_jobs, int* next_submit_time, char* i
 		}
 
 		new_job->next = NULL;
-		
-		//~ #ifdef PRINT
-		//~ printf("unique_id: %d, subtime: %d, delay: %d, walltime: %d, cores: %d, data: %d, data_size: %f, index_node_list: %d start_time: %d end_time: %d end_before_walltime: %d transfer_time: %d waiting_for_a_load_time: %d workload: %d start_time_from_history: %d node_from_history: %d\n", new_job->unique_id, new_job->subtime, new_job->delay, new_job->walltime, new_job->cores, new_job->data, new_job->data_size, new_job->index_node_list, new_job->start_time, new_job->end_time, new_job->end_before_walltime, new_job->transfer_time, new_job->waiting_for_a_load_time, new_job->workload, new_job->start_time_from_history, new_job->node_from_history);
-		//~ #endif
-		
+				
 		insert_tail_job_list(running_jobs, new_job);
 		
 		if(!fscanf(f, "%s", str))
@@ -1482,13 +1460,7 @@ void resume_state(int* t, int* old_finished_jobs, int* next_submit_time, char* i
 		exit(EXIT_FAILURE);
 	}
 	}
-	
-	//~ #ifdef PRINT
-	//~ printf("running_jobs:\n");
-	//~ print_job_list(running_jobs->head);
-	//~ printf("\n");
-	//~ #endif
-	
+		
 	jobs_to_print_list = malloc(sizeof(*jobs_to_print_list));
 	jobs_to_print_list->head = NULL;
 	jobs_to_print_list->tail = NULL;

@@ -55,10 +55,6 @@ void insert_tail_node_list(struct Node_List* liste, struct Node* n)
 void initialize_cores_in_a_hole(struct Core_in_a_hole_List* liste, struct Core_in_a_hole* c)
 {
 	liste = (struct Core_in_a_hole_List*) malloc(sizeof(struct Core_in_a_hole_List));
-	//~ liste->head = NULL;
-	//~ liste->tail = NULL;
-	//~ struct Core_in_a_hole* new = (struct Core_in_a_hole*) malloc(sizeof(struct Core_in_a_hole));
-	//~ insert_cores_in_a_hole_list_sorted_decreasing_order(liste, c);
 	liste->head = c;
 }
 
@@ -80,7 +76,6 @@ void insert_cores_in_a_hole_list_sorted_decreasing_order(struct Core_in_a_hole_L
 	}
     else
     {
-		//~ printf("3.\n");
 		 struct Core_in_a_hole* current;
         /* Locate the node before
 the point of insertion */
@@ -143,16 +138,8 @@ void delete_core_in_hole_from_head(struct Core_in_a_hole_List* liste, int nb_cor
 		temp = liste->head;
 		//~ printf("changing head.\n"); fflush(stdout);
         liste->head = temp->next; // Changed head
-        //~ printf("will free %d.\n", temp->unique_id); fflush(stdout);
-        //~ if (unique_id_to_delete == 11) {
-			//~ printf("Free the head.\n"); fflush(stdout); }
         free(temp); // free old head
-        //~ if (unique_id_to_delete == 11) {
-        //~ printf("Free the head Ok!\n"); fflush(stdout); }
-        //~ return;
-        //~ print_holes(
     }
-    //~ printf("delete ok\n"); fflush(stdout);
 }
 
 void delete_core_in_hole_specific_core(struct Core_in_a_hole_List* liste, int unique_id_to_delete)
@@ -657,27 +644,20 @@ void copy_delete_insert_job_list(struct Job_List* to_delete_from, struct Job_Lis
 	
 	new->user = j->user;
 	
-	/* OLD */
-	//~ new->cores_used = malloc(new->cores*sizeof(int));
-	//~ new->cores_used = j->cores_used;
-	/* NEW */
 	new->cores_used = (int*) malloc(new->cores*sizeof(int));
 	for (int i = 0; i < new->cores; i++)
 	{
 		new->cores_used[i] = j->cores_used[i];
 	}
 
-	/* Delete */
 	delete_job_linked_list(to_delete_from, j->unique_id);
 	
-	/* Add in new list */
 	insert_tail_job_list(to_append_to, new);
 }
 
 /* Copy a job, delete it from list 1 and add it in tail of list 2 in sorted by decreasing file size order. */
 void copy_delete_insert_job_list_sorted_by_file_size(struct Job_List* to_delete_from, struct Job_List* to_append_to, struct Job* j)
 {
-	/* If empty can't delete. */
 	if (to_delete_from == NULL)
     {
 		printf("Error list empty.\n");
@@ -885,40 +865,9 @@ void sort_cores_by_unique_id_in_specific_node(struct Node* n)
 				n->cores[i] = n->cores[i+1];
 				n->cores[i + 1] = temp;
 			}
-			//~ else if (n->cores[i]->available_time == n->cores[i + 1]->available_time && n->cores[i]->unique_id > n->cores[i + 1]->unique_id)
-			//~ {
-				//~ struct Core* temp = n->cores[i];
-				//~ n->cores[i] = n->cores[i+1];
-				//~ n->cores[i + 1] = temp;
-			//~ }
 		}
 	}
 }
-
-//~ void sort_cores_of_a_hole_by_start_time_decreasing_order_in_specific_node(struct Node* n)
-//~ {
-	//~ printf("Début de sort_cores_of_a_hole_by_start_time_decreasing_order_in_specific_node. exit(1).\n"); fflush(stdout);
-	//~ exit(1);
-	//~ int temp = 0;
-	//~ for (int step = 0; step < n->number_cores_in_a_hole - 1; step++)
-	//~ {
-		//~ for (int i = 0; i < n->number_cores_in_a_hole - step - 1; ++i)
-		//~ {
-			//~ if (n->cores[i]->available_time > n->cores[i + 1]->available_time)
-			//~ {
-				//~ struct Core* temp = n->cores[i];
-				//~ n->cores[i] = n->cores[i+1];
-				//~ n->cores[i + 1] = temp;
-			//~ }
-			//~ else if (n->cores[i]->available_time == n->cores[i + 1]->available_time && n->cores[i]->unique_id > n->cores[i + 1]->unique_id)
-			//~ {
-				//~ struct Core* temp = n->cores[i];
-				//~ n->cores[i] = n->cores[i+1];
-				//~ n->cores[i + 1] = temp;
-			//~ }
-		//~ }
-	//~ }
-//~ }
 
 // Function to insert a given node at its correct sorted position into a given
 // list sorted in decreasing order
@@ -953,22 +902,6 @@ void sort_job_list_by_file_size(struct Job** head)
     }
 	*head = result;
 }
-
-//~ void free_data_list(struct Data** head_ref)
-//~ {
-	//~ /* deref head_ref to get the real head */
-	//~ struct Data* current = *head_ref;
-	//~ struct Data* next;
-   //~ while (current != NULL)
-   //~ {
-       //~ next = current->next;
-       //~ free(current);
-       //~ current = next;
-   //~ }
-   //~ /* deref head_ref to affect the real head back
-      //~ in the caller. */
-   //~ *head_ref = NULL;
-//~ }
 
 void free_and_copy_data_and_intervals_in_temp_data(struct Node_List** head_node, int t)
 {
@@ -1019,11 +952,6 @@ void free_and_copy_data_and_intervals_in_temp_data(struct Node_List** head_node,
 				new->intervals->tail = NULL;
 				new->size = d->size;
 
-					//~ d->intervals = (struct Interval_List*) malloc(sizeof(struct Interval_List));
-					//~ d->intervals->head = NULL;
-					//~ d->intervals->tail = NULL;
-					//~ if (d->nb_task_using_it > 0)
-					//~ {
 						create_and_insert_tail_interval_list(new->intervals, t);
 						
 						#ifdef PRINT
@@ -1047,13 +975,6 @@ void free_and_copy_data_and_intervals_in_temp_data(struct Node_List** head_node,
 							create_and_insert_tail_interval_list(new->intervals, new->start_time);
 						}
 						create_and_insert_tail_interval_list(new->intervals, new->end_time);
-					//~ }
-					//~ else if (d->end_time >= t) /* Cas finis et re enchaine */
-					//~ {
-						//~ create_and_insert_tail_interval_list(d->intervals, t);
-						//~ create_and_insert_tail_interval_list(d->intervals, t);
-						//~ create_and_insert_tail_interval_list(d->intervals, t);
-					//~ }	
 				insert_tail_data_list(n->temp_data, new);			
 				d = d->next;
 			}

@@ -26,11 +26,7 @@ void get_state_before_day_0_scheduler(struct Job* j2, struct Node_List** n, int 
 
 	struct Job* j = j2;
 	while (j != NULL)
-	{
-		/* Insert in scheduled_job_list */
-		//~ copy_job_and_insert_tail_job_list(scheduled_job_list, j);
-		//~ insert_tail_job_list(scheduled_job_list, j);
-		
+	{		
 		int time_since_start = t - j->start_time_from_history;
 		j->delay -= time_since_start;
 		if(j->delay <= 0)
@@ -142,47 +138,6 @@ void fcfs_scheduler(struct Job* head_job, struct Node_List** head_node, int t, b
 	}
 }
 
-//~ void fcfs_with_a_score_mixed_strategy_scheduler(struct Job* head_job, struct Node_List** head_node, int t, int multiplier_file_to_load, int multiplier_file_evicted, int multiplier_nb_copy)
-//~ {
-	//~ #ifdef PRINT
-	//~ printf("Start fcfs mixed scheduler.\n");
-	//~ #endif
-		
-	//~ int nb_non_available_cores = get_nb_non_available_cores(node_list, t);
-
-	//~ struct Job* j = head_job;
-	//~ while (j != NULL)
-	//~ {
-		//~ if (nb_non_available_cores < nb_cores)
-		//~ {
-			//~ #ifdef PRINT
-			//~ printf("There are %d/%d available cores.\n", nb_cores - nb_non_available_cores, nb_cores);
-			//~ #endif
-			
-			//~ nb_non_available_cores = schedule_job_on_earliest_available_cores(j, head_node, t, nb_non_available_cores, use_bigger_nodes);
-			
-			//~ insert_next_time_in_sorted_list(start_times, j->start_time);
-			
-			//~ j = j->next;
-		//~ }
-		//~ else
-		//~ {
-			//~ #ifdef PRINT
-			//~ printf("There are %d/%d available cores.\n", nb_cores - nb_non_available_cores, nb_cores);
-			//~ #endif
-			
-			//~ /* Need to put -1 at remaining start times of jobs to avoid error in n_vailable_cores. */
-			//~ while (j != NULL)
-			//~ {
-				//~ j->start_time = -1;
-				//~ j = j->next;
-			//~ }
-			
-			//~ break;
-		//~ }
-	//~ }
-//~ }
-
 /**
  * Schedule normalement.
  * Si je vois que un trou va se créer avec EAT == t, je le marque dans la liste des trous dans la struct node.
@@ -219,17 +174,6 @@ void fcfs_conservativebf_scheduler(struct Job* head_job, struct Node_List** head
 			
 			schedule_job_on_earliest_available_cores_with_conservative_backfill(j, head_node, t, backfill_mode, &nb_non_available_cores, &nb_non_available_cores_at_time_t);
 			
-			//~ nb_cores_rescheduled += j->cores;
-			
-			//~ if (j->start_time < t)
-			//~ {
-				//~ printf("Error: j->start_time < t\n"); fflush(stdout);
-				//~ exit(1);
-			//~ }
-			
-			//~ insert_next_time_in_sorted_list(start_times, j->start_time);
-			
-			/* Test complexité réduite */
 			if (j->start_time >= t)
 			{
 				insert_next_time_in_sorted_list(start_times, j->start_time);

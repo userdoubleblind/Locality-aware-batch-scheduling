@@ -5,7 +5,6 @@ void read_cluster(char* input_node_file)
 	node_list = (struct Node_List**) malloc(3*sizeof(struct Node_List));
 	for (int i = 0; i < 3; i++)
 	{
-		//~ node_list[i] = malloc(sizeof(*node_list));
 		node_list[i] = (struct Node_List*) malloc(sizeof(struct Node_List));
 		node_list[i]->head = NULL;
 		node_list[i]->tail = NULL;
@@ -221,29 +220,6 @@ void read_workload(char* input_job_file, int constraint_on_sizes)
 			new->user = user_id;
 		}
 		
-		//~ /** For mixed decreasing strategy **/
-		//~ /* Need to create the data if it does not exist. 
-		 //~ * I don't have to look at everything because similar data are always consecutive. */
-		//~ if (d->unique_id == atoi(data)) /* The data already exist. */
-		//~ {
-			//~ d->number_of_task_using_it_not_running += 1;
-		//~ }
-		//~ else /* Need to create the data */
-		//~ {
-			//~ struct Data* d = (struct Data*) malloc(sizeof(struct Data));
-			//~ d->next = NULL;
-			//~ d->unique_id = atoi(data);
-			//~ d->start_time = -1;
-			//~ d->end_time = -1;
-			//~ d->intervals = (struct Interval_List*) malloc(sizeof(struct Interval_List));
-			//~ d->intervals->head = NULL;
-			//~ d->intervals->tail = NULL;
-			//~ d->size = atof(data_size);
-			//~ d->number_of_task_using_it_not_running = 1;
-			//~ insert_tail_data_list(data_list, d);	
-		//~ }
-		//~ new->data = d;
-		//~ /** For mixed decreasing strategy **/
 		
 		/* Get index_node */
 		if (constraint_on_sizes != 0)
@@ -314,42 +290,7 @@ void read_workload(char* input_job_file, int constraint_on_sizes)
 			// NEW
 			insert_job_in_sorted_list(job_list_to_start_from_history, new);
 			
-			// OLD
-			//~ if (job_list_to_start_from_history->head == NULL)
-			//~ {
-				//~ job_list_to_start_from_history->head = new;
-				//~ job_list_to_start_from_history->tail = new;
-			//~ }
-			//~ else
-			//~ {
-				//~ /* Want to insert it so the start time are sorted. */
-				//~ struct Job *temp = job_list_to_start_from_history->head;
-				//~ /* Is it our new head ? */
-				//~ if(temp->start_time_from_history > new->start_time_from_history)
-				//~ {
-					//~ printf("New head.\n"); fflush(stdout);
-					//~ new->next = job_list_to_start_from_history->head;
-					//~ job_list_to_start_from_history->head = new;
-				//~ }
-				//~ else
-				//~ {
-					//~ printf("Not new head.\n"); fflush(stdout);
-					//~ while(temp != NULL)
-					//~ {
-						//~ if(temp->next->start_time_from_history > new->start_time_from_history)
-						//~ {
-							//~ new->next = temp->next;
-							//~ temp->next = new;
-							//~ printf("Inserted -2.\n");
-							//~ break;
-						//~ }
-						//~ temp = temp->next;
-					//~ }
-				//~ }
-			//~ }
-			//~ printf("Insert -2 Ok.\n"); fflush(stdout);	
 		}
-		//~ printf("Added job %d.\n", new->unique_id); fflush(stdout);
 	}
 	fclose(f);
 	
